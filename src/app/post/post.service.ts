@@ -7,7 +7,7 @@ import PostNotFoundException from '../exceptions/PostNotFoundException';
 import ErrorWithPayload from '../exceptions/ErrorWithPayload';
 import User from '../user/user.interface';
 import NotAuthorizedException from '../exceptions/NotAuthorizedException';
-import { compareStrings, getUUID } from '../utils/utils';
+import { compareStrings } from '../utils/utils';
 
 class PostService {
   private post = postModel;
@@ -28,8 +28,8 @@ class PostService {
     if (compareStrings(author, user._id)) {
       const posts = await this.post.find({ author });
       if (posts) return posts;
-      throw new NotAuthorizedException();
     }
+    throw new NotAuthorizedException();
   };
 
   public modifyPost = async (id: string, postData: Post) => {

@@ -8,7 +8,9 @@ import errorMiddleware from './middleware/error.middleware';
 import YAML from 'yaml';
 import fs from 'fs';
 import path from 'path';
-import loggerMiddleware from 'middleware/logger.middleware';
+import https from 'https';
+import util from 'util';
+import loggerMiddleware from './middleware/logger.middleware';
 
 class App {
   public app: express.Application;
@@ -24,8 +26,10 @@ class App {
     this.initializeErrorHandling();
   }
 
-  public listen() {
-    this.app.listen(process.env.SERVER_PORT, () => {
+  public async listen() {
+    const readFile = util.promisify(fs.readFile);
+    const [key, cert] = await Promise.all([readFile('./src/app/key.pem'), readFile('./src/app/certificate.pem')]);
+    https.createServer({ key, cert }, this.app).listen(process.env.SERVER_PORT, () => {
       console.info(`App listening on the port ${process.env.SERVER_PORT}`);
     });
   }
@@ -43,7 +47,7 @@ class App {
   private initializeSwagger() {
     // TODO: Investigate on how to include swagger documentation in Typescript build
     try {
-      const swaggerDocument = fs.readFileSync(path.resolve(__dirname, './_docs/swagger/swagger.yml'), 'utf-8');
+      const swaggerDocument = fs.readFileSync(path.resolve(__dirname, './../../reference/openapi.reference.yaml'), 'utf-8');
       const swaggerDocumentation = YAML.parse(swaggerDocument);
       const options = {
         explorer: true,

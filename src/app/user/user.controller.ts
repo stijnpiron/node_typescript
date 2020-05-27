@@ -3,13 +3,11 @@ import Controller from '../interfaces/controller.interface';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
 import authMiddleware from '../middleware/auth.middleware';
 import { OK } from 'http-status-codes';
-import UserService from './user.service';
 import PostService from '../post/post.service';
 
 class UserController implements Controller {
   public path = '/users';
   public router = express.Router();
-  private userService = new UserService();
   private postService = new PostService();
 
   constructor() {
@@ -17,7 +15,7 @@ class UserController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/:id/posts`, authMiddleware, this.getAllPostsOfUser);
+    this.router.get(`${this.path}/:id/posts`, authMiddleware as any, this.getAllPostsOfUser as any);
   }
 
   private getAllPostsOfUser = async (req: RequestWithUser, res: express.Response, next: express.NextFunction) => {

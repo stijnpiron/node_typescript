@@ -31,8 +31,8 @@ class AuthenticationService {
         cookie,
         user,
       };
-    } catch (err) {
-      throw new ErrorWithPayload(INTERNAL_SERVER_ERROR, 'Unable to register new user', { err, userData });
+    } catch (errMessage) {
+      throw new ErrorWithPayload(INTERNAL_SERVER_ERROR, 'Unable to register new user', { errMessage, userData });
     }
   };
 

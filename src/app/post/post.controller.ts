@@ -5,15 +5,13 @@ import authMiddleware from '../middleware/auth.middleware';
 import validationMiddleware from '../middleware/validation.middleware';
 import CreatePostDto from './post.dto';
 import Post from './post.interface';
-import postModel from './post.model';
 import { OK } from 'http-status-codes';
 import PostService from './post.service';
 
 class PostController implements Controller {
-  public path = '/posts';
+  public path = '/post';
   public router = express.Router();
   private postService = new PostService();
-  private post = postModel;
 
   constructor() {
     this.initializeRoutes();
@@ -23,10 +21,10 @@ class PostController implements Controller {
     this.router.get(this.path, this.getAllPosts);
     this.router.get(`${this.path}/:id`, this.getPostById);
     this.router
-      .all(`${this.path}/*`, authMiddleware)
-      .patch(`${this.path}/:id`, validationMiddleware(CreatePostDto, true), this.modifyPost)
+      .all(`${this.path}/*`, authMiddleware as any)
       .delete(`${this.path}/:id`, this.deletePost)
-      .post(this.path, authMiddleware, validationMiddleware(CreatePostDto), this.createPost);
+      .patch(`${this.path}/:id`, validationMiddleware(CreatePostDto, true), this.modifyPost)
+      .post(this.path, validationMiddleware(CreatePostDto), this.createPost as any);
   }
 
   private getAllPosts = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -73,7 +71,7 @@ class PostController implements Controller {
   private deletePost = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const id = req.params.id;
     try {
-      const response = await this.postService.deletePost(id);
+      await this.postService.deletePost(id);
       res.status(OK).send();
     } catch (err) {
       next(err);
