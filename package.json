@@ -4,10 +4,10 @@
   "description": "",
   "main": "src/app/server.ts",
   "scripts": {
-    "build": "rimraf ./dist && tsc",
+    "build:test": "rimraf ./build && tsc --outDir build",
     "dev": "ts-node-dev --respawn src/app/server.ts",
     "lint": "tslint -p tsconfig.json -c tslint.json && echo 'finished linting'",
-    "start": "npm run build && node dist/server.js",
+    "start:test": "npm run build:test && node build/server.js",
     "test": "jest"
   },
   "keywords": [],
