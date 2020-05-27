@@ -1,0 +1,55 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app/server.ts",
+  "scripts": {
+    "build": "rimraf ./dist && tsc",
+    "dev": "ts-node-dev --respawn src/app/server.ts",
+    "lint": "tslint -p tsconfig.json -c tslint.json && echo 'finished linting'",
+    "start": "npm run build && node dist/server.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "body-parser": "^1.19.0",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.12.2",
+    "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
+    "envalid": "^6.0.1",
+    "express": "^4.17.1",
+    "http-status-codes": "^1.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.16",
+    "swagger-ui-express": "^4.1.4",
+    "uuid": "^8.1.0",
+    "yaml": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/express": "^4.17.6",
+    "@types/jest": "^25.2.3",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/mongoose": "^5.7.21",
+    "@types/node": "^14.0.5",
+    "@types/swagger-ui-express": "^4.1.2",
+    "@types/uuid": "^8.0.0",
+    "jest": "^26.0.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.0.0",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "tslint": "^6.1.2",
+    "tslint-config-airbnb": "^5.11.2",
+    "typescript": "^3.9.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  }
+}
