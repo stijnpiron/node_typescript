@@ -1,0 +1,288 @@
+openapi: 3.0.2
+info:
+  title: Node Typescript tutorial project
+  version: '1.0'
+  description: Project to get to know Node.js with TypeScript to create a template
+  contact:
+    name: Grasshopper.io
+    email: info@grasshopper.io
+    url: 'https://grasshopper.io'
+servers:
+  - url: 'https://localhost:5000/api'
+    description: local dev server
+paths:
+  /posts:
+    get:
+      summary: getAllPosts
+      tags:
+        - Posts
+      responses: {}
+      operationId: get-posts
+    post:
+      summary: createPost
+      tags:
+        - Posts
+      responses: {}
+      operationId: post-posts
+      description: ''
+  '/posts/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: getPostById
+      tags:
+        - Posts
+      responses: {}
+      operationId: get-posts-id
+    delete:
+      summary: deletePost
+      tags:
+        - Posts
+      responses: {}
+      operationId: delete-posts-id
+    patch:
+      summary: modifyPost
+      tags:
+        - Posts
+      responses: {}
+      operationId: patch-posts-id
+  /auth/register:
+    post:
+      summary: register
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUserResponse'
+              examples:
+                example:
+                  value:
+                    _id: 5eced6a77f94185248e6f611
+                    name: John Doe
+                    email: john.doe@notfound.com
+                    address:
+                      _id: 5eced6a77f94185248e6f612
+                      street: Muntplein 1
+                      city: 1000 Brussels
+                      country: Belgium
+                    __v: 0
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+              description: Authentication cookie
+              required: true
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                example:
+                  value:
+                    code: 500
+                    type: Server Error
+                    message: Unable to register new user
+                    data:
+                      errMessage: MongoDB error
+                      userData:
+                        name: John Doe
+                        email: john.doe@notfound.com
+                        password: Password1234
+                        address:
+                          street: Muntplein 1
+                          city: 1000 Brussels
+                          country: Belgium
+      operationId: post-auth-register
+      description: Register a new user
+      security: []
+      parameters:
+        - schema:
+            type: string
+          name: id
+          in: query
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+            examples:
+              example:
+                value:
+                  name: John Doe
+                  email: john.doe@notfound.com
+                  password: Password1234
+                  address:
+                    street: Muntplein 1
+                    city: 1000 Brussels
+                    country: Belgium
+        description: User info to register with
+  /auth/login:
+    post:
+      summary: login
+      tags:
+        - Auth
+      responses: {}
+      operationId: post-auth-login
+  /auth/logout:
+    post:
+      summary: logout
+      tags:
+        - Auth
+      responses: {}
+      operationId: post-auth-logout
+  '/user/{id}/posts':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: getAllPostsOfUser
+      tags:
+        - User
+      responses: {}
+      operationId: get-user-id-posts
+  /report:
+    get:
+      summary: generateReport
+      tags:
+        - Report
+      responses: {}
+      operationId: get-report
+components:
+  securitySchemes:
+    Basic authentication:
+      type: http
+      scheme: basic
+      description: Basic authentication for user actions
+  schemas:
+    CreateUserRequest:
+      title: CreateUserRequest
+      type: object
+      x-tags:
+        - Auth
+      description: ''
+      x-examples:
+        example:
+          name: John Doe
+          email: john.doe@notfound.com
+          password: Password1234
+          address:
+            street: Muntplein 1
+            city: 1000 Brussels
+            country: Belgium
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressRequest'
+      required:
+        - name
+        - email
+        - password
+    AddressRequest:
+      title: AddressRequest
+      type: object
+      x-examples:
+        example:
+          street: Muntplein 1
+          city: 1000 Brussels
+          country: Belgium
+      properties:
+        street:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+      required:
+        - street
+        - city
+        - country
+      x-tags:
+        - Auth
+        - user
+    CreateUserResponse:
+      title: CreateUserResponse
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        address:
+          $ref: '#/components/schemas/AddressResponse'
+        __v:
+          type: number
+      x-examples:
+        example:
+          _id: 5eced6a77f94185248e6f611
+          name: John Doe
+          email: john.doe@notfound.com
+          address:
+            _id: 5eced6a77f94185248e6f612
+            street: Muntplein 1
+            city: 1000 Brussels
+            country: Belgium
+          __v: 0
+      x-tags:
+        - Auth
+    AddressResponse:
+      title: AddressResponse
+      type: object
+      properties:
+        _id:
+          type: string
+        street:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+      x-tags:
+        - Auth
+        - user
+    Error:
+      title: Error
+      type: object
+      description: Error coming from the API
+      x-examples:
+        example:
+          code: 500
+          type: Server Error
+          message: Something went wrong
+          data:
+            id: 5ece7c015def184c404856b5
+      properties:
+        code:
+          type: number
+        type:
+          type: string
+        message:
+          type: string
+        data:
+          type: object
+      x-tags:
+        - Auth
+        - Posts
+        - report
+        - user
+security:
+  - Basic authentication: []
