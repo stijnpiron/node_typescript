@@ -1,10 +1,13 @@
 language: node_js
 node_js:
-  - lts/*
+- lts/*
 script:
-  - 'npm run lint:commit'
-  - 'npm run test'
-# safelist, only following branches can trigger builds
+- npm run lint:commit
+- npm run test
 branches:
   only:
-    - master
+  - master
+deploy:
+  provider: heroku
+  api_key:
+    secure: vuECLJprhbhRFB5QpAEcJ0oiMoSvm0pZ3D8kTgngnFP/3oOqYm5dvht/HoJDS4G35I2ncVQApsWpTtsUsy7NsOvsV7RFo7mc6KO9OHp3u/9jAgmQUjq9AIIBmknG3PZ7c1QOM9glI+OLdt2Q3GlOEUSy95sjEeU9A4OvXCtemrbeKbh4tEkmLV72jDCzhdLmben8gYyDIcfOzqUmvEKjnuhX7xIt5rCxHR/xSP4XeHpVEvhvNm0zTjQtt86c8vn2otaNKrXxExamRgf8a5xDKQyPzONjHoarW/0AKb//COJ9apA1uBhJiBnmQi6O1g6zJYbcYciKQ9NvxgRd1WDpEK1xKFvj3kY7InMGFm0oqS7BgDTX3he8nNQo5W7/sRPpFK6xJI+UM9GSmLAMhyqw5TswqQk539vdM/XN1G31lvD/9NRyHHXpMgKEjKp/IEtKFdg4fcy1tVzbu5NbH0zcQqAj+SnNfO+e0LmDpzwu5T45sKwYvKwW/Vne42G9attlbRHF5kzCHHKsrOd1tQRBUACownES4wsikC5RNeeFGZtW8+i+xBXMC4jdCOzWayEpLwM7cTEEMTmiGmQTgCdhmJZyY+8KVlsS23W9uHdueMdteNuDX7d/rmMVaJzOcle7Es6vBoLx9lSR5Q86XVR14Qt/tLtlKO4e5FmJaRBPFA0=
