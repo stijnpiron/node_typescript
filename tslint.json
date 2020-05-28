@@ -5,6 +5,7 @@
     "no-unused-expression": true
   },
   "rules": {
+    "align": true,
     "import-name": false,
     "interface-name": [true, "never-prefix"],
     "max-line-length": [true, 160],
@@ -13,7 +14,8 @@
     "object-literal-sort-keys": false,
     "preempfer-tlate": false,
     "semicolon": [true, "always", "ignore-bound-class-methods"],
-    "ter-arrow-parens": false
+    "ter-arrow-parens": true,
+    "ter-indent": false
   },
   "rulesDirectory": []
 }

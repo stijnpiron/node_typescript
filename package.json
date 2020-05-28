@@ -6,7 +6,7 @@
   "scripts": {
     "build:test": "rimraf ./build && npm run lint && tsc --outDir build",
     "docs": "typedoc --out docs --mode modules src",
-    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "lint": "tslint -p tsconfig.json -c tslint.json --fix",
     "start": "ts-node-dev --respawn src/app/server.ts",
     "start:test": "npm run build:test && node build/server.js",
     "test": "mocha -r ts-node/register src/test/**/*.test.ts"
@@ -48,6 +48,7 @@
     "@types/swagger-ui-express": "^4.1.2",
     "@types/uuid": "^8.0.0",
     "chai": "^4.2.0",
+    "husky": "^4.2.5",
     "mocha": "^7.2.0",
     "rimraf": "^3.0.2",
     "supertest": "^4.0.2",
