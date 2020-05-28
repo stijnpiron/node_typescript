@@ -30,10 +30,17 @@ class App {
   }
 
   public async listen() {
-    const [key, cert] = await Promise.all([this.readFile('./assets/cert/key.pem'), this.readFile('./assets/cert/certificate.pem')]);
-    https.createServer({ key, cert }, this.app).listen(process.env.SERVER_PORT, () => {
-      console.info(`App listening on the port ${process.env.SERVER_PORT}`);
-    });
+    try {
+      const [key, cert] = await Promise.all([this.readFile('./assets/cert/key.pem'), this.readFile('./assets/cert/certificate.pem')]);
+      https.createServer({ key, cert }, this.app).listen(process.env.PORT, () => {
+        console.info(`App listening on https port ${process.env.PORT}`);
+      });
+    } catch (err) {
+      console.warn('Unable to start HTTPS server, falling back to HTTP server', err);
+      this.app.listen(process.env.PORT, () => {
+        console.info(`App listening on https port ${process.env.PORT}`);
+      });
+    }
   }
 
   private initializeLogging() {

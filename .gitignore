@@ -9,3 +9,6 @@
 
 # documentation folder
 /docs
+
+# environment file
+.env

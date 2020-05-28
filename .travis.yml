@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - lts/*
 script:
-  - 'npm run lint'
+  - 'npm run lint:commit'
   - 'npm run test'
 # safelist, only following branches can trigger builds
 branches:
