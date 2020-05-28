@@ -8,7 +8,7 @@ function validateEnv() {
     MONGO_PASSWORD: str(),
     MONGO_PATH: str(),
     MONGO_USER: str(),
-    SERVER_PORT: port(),
+    PORT: port(),
     TWO_FACTOR_AUTHENTICATION_APP_NAME: str(),
   });
 }

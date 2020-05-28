@@ -30,10 +30,17 @@ class App {
   }
 
   public async listen() {
-    const [key, cert] = await Promise.all([this.readFile('./assets/cert/key.pem'), this.readFile('./assets/cert/certificate.pem')]);
-    https.createServer({ key, cert }, this.app).listen(process.env.SERVER_PORT, () => {
-      console.info(`App listening on the port ${process.env.SERVER_PORT}`);
-    });
+    try {
+      const [key, cert] = await Promise.all([this.readFile('./assets/cert/key.pem'), this.readFile('./assets/cert/certificate.pem')]);
+      https.createServer({ key, cert }, this.app).listen(process.env.PORT, () => {
+        console.info(`App listening on https port ${process.env.PORT}`);
+      });
+    } catch (err) {
+      console.warn('Unable to start HTTPS server, falling back to HTTP server', err);
+      this.app.listen(process.env.PORT, () => {
+        console.info(`App listening on https port ${process.env.PORT}`);
+      });
+    }
   }
 
   private initializeLogging() {
@@ -46,9 +53,9 @@ class App {
                 return stringContainsElementOfArray(req.originalUrl, ['/api/swagger']);
               },
             },
-            ':method :status : :url : :response-time[digits]ms/:total-time[digits]ms :res[content-length]B -- :remote-addr - :remote-user -- ":referrer" ":user-agent" HTTP/:http-version -- :req[cookie]',
+            ':method :status : :url : :response-time[digits]ms/:total-time[digits]ms :res[content-length]B -- :remote-addr - :remote-user -- ":referrer" ":user-agent" HTTP/:http-version -- :req[cookie]'
           )
-        : loggerMiddleware(['/swagger']),
+        : loggerMiddleware(['/swagger'])
     );
   }
 
