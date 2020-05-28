@@ -53,9 +53,9 @@ class App {
                 return stringContainsElementOfArray(req.originalUrl, ['/api/swagger']);
               },
             },
-            ':method :status : :url : :response-time[digits]ms/:total-time[digits]ms :res[content-length]B -- :remote-addr - :remote-user -- ":referrer" ":user-agent" HTTP/:http-version -- :req[cookie]'
+            ':method :status : :url : :response-time[digits]ms/:total-time[digits]ms :res[content-length]B -- :remote-addr - :remote-user -- ":referrer" ":user-agent" HTTP/:http-version -- :req[cookie]',
           )
-        : loggerMiddleware(['/swagger'])
+        : loggerMiddleware(['/swagger']),
     );
   }
 
