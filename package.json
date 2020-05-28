@@ -8,7 +8,8 @@
     "docs": "typedoc --out docs --mode modules src",
     "lint": "tslint -p tsconfig.json -c tslint.json --fix",
     "lint:commit": "tslint -p tsconfig.json -c tslint.json",
-    "start": "ts-node-dev --respawn src/app/server.ts",
+    "start:dev": "ts-node-dev --respawn src/app/server.ts",
+    "start": "ts-node ./src/server.ts",
     "start:test": "npm run build:test && node build/server.js",
     "test": "mocha -r ts-node/register src/test/**/*.test.ts"
   },
