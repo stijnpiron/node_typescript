@@ -34,7 +34,7 @@ class App {
   }
 
   private initializeMiddlewares() {
-    this.app.use(loggerMiddleware);
+    this.app.use(loggerMiddleware(['/swagger']));
     this.app.use(bodyParser.json());
     this.app.use(cookieParser());
   }
@@ -46,7 +46,7 @@ class App {
   private async initializeSwagger() {
     // TODO: Investigate on how to include swagger documentation in Typescript build
     try {
-      const [swaggerDocument] = await Promise.all([this.readFile('./assets/reference/openapi.reference.yaml')]);
+      const [swaggerDocument] = await Promise.all([this.readFile('./openapi.reference.yml')]);
       const swaggerDocumentation = YAML.parse(swaggerDocument.toString());
       const options = {
         explorer: true,
@@ -64,8 +64,8 @@ class App {
   }
 
   private connectToTheDatabase() {
-    const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH } = process.env;
-    mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_PATH}`, { useNewUrlParser: true, useUnifiedTopology: true });
+    const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH, MONGO_DB } = process.env;
+    mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_PATH}/${MONGO_DB}`, { useNewUrlParser: true, useUnifiedTopology: true });
   }
 }
 

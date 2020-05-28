@@ -1,3 +1,4 @@
+import WrongAuthenticationTokenException from '../exceptions/WrongAuthenticationTokenException';
 import express from 'express';
 import Controller from '../interfaces/controller.interface';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
@@ -21,7 +22,7 @@ class PostController implements Controller {
     this.router.get(this.path, this.getAllPosts);
     this.router.get(`${this.path}/:id`, this.getPostById);
     this.router
-      .all(`${this.path}/*`, authMiddleware as any)
+      .all(`${this.path}/*`, authMiddleware())
       .delete(`${this.path}/:id`, this.deletePost)
       .patch(`${this.path}/:id`, validationMiddleware(CreatePostDto, true), this.modifyPost)
       .post(this.path, validationMiddleware(CreatePostDto), this.createPost as any);
@@ -59,6 +60,9 @@ class PostController implements Controller {
 
   private createPost = async (req: RequestWithUser, res: express.Response, next: express.NextFunction) => {
     const postData: CreatePostDto = req.body;
+    if (!req.user) {
+      next(new WrongAuthenticationTokenException());
+    }
     const userId: string = req.user._id;
     try {
       const createdPost = await this.postService.createPost(userId, postData);

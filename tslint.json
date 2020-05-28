@@ -12,7 +12,8 @@
     "no-debugger": true,
     "object-literal-sort-keys": false,
     "preempfer-tlate": false,
-    "semicolon": [true, "always", "ignore-bound-class-methods"]
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "ter-arrow-parens": false
   },
   "rulesDirectory": []
 }

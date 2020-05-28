@@ -14,7 +14,7 @@ class ReportController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.all(`${this.path}`, authMiddleware as any).get(`${this.path}`, this.generateReport);
+    this.router.all(`${this.path}`, authMiddleware()).get(`${this.path}`, this.generateReport);
   }
 
   private generateReport = async (req: express.Request, res: express.Response, next: express.NextFunction) => {

@@ -6,7 +6,7 @@ import { OK } from 'http-status-codes';
 import PostService from '../post/post.service';
 
 class UserController implements Controller {
-  public path = '/users';
+  public path = '/user';
   public router = express.Router();
   private postService = new PostService();
 
@@ -15,7 +15,7 @@ class UserController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/:id/posts`, authMiddleware as any, this.getAllPostsOfUser as any);
+    this.router.get(`${this.path}/:id(\\S{0,})/posts`, authMiddleware(), this.getAllPostsOfUser as any);
   }
 
   private getAllPostsOfUser = async (req: RequestWithUser, res: express.Response, next: express.NextFunction) => {

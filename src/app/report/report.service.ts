@@ -1,4 +1,4 @@
-import ErrorWithPayload from '../exceptions/ErrorWithPayload';
+import ExceptionWithPayload from '../exceptions/ExceptionWithPayload';
 import userModel from '../user/user.model';
 import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
 
@@ -58,7 +58,7 @@ class ReportService {
       },
     });
     if (usersByCountries && countries && numberOfUsersWithAddress) return { countries, numberOfUsersWithAddress, usersByCounrties: usersByCountries };
-    throw new ErrorWithPayload(INTERNAL_SERVER_ERROR, 'Unable to generate report', {
+    throw new ExceptionWithPayload(INTERNAL_SERVER_ERROR, 'Unable to generate report', {
       usersByCounrties: usersByCountries || undefined,
       countries: countries || undefined,
       numberOfUsersWithAddress: numberOfUsersWithAddress || undefined,

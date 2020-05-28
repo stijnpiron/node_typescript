@@ -1,5 +1,6 @@
+import WrongAuthenticationTokenException from '../exceptions/WrongAuthenticationTokenException';
 import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
-import ErrorWithPayload from '../exceptions/ErrorWithPayload';
+import ExceptionWithPayload from '../exceptions/ExceptionWithPayload';
 import userModel from '../user/user.model';
 import CreateUserDto from '../user/user.dto';
 import UserWithThatEmailAlreadyExistsException from '../exceptions/UserWithThatEmailAlreadyExistsException';
@@ -10,6 +11,9 @@ import TokenData from '../interfaces/tokenData.interface';
 import DataStoredInToken from '../interfaces/dataStoredInToken';
 import LoginDto from './login.dto';
 import WrongCredentialsException from '../exceptions/WrongCredentialsException';
+import speakeasy from 'speakeasy';
+import { Response } from 'express';
+import QRCode from 'qrcode';
 
 class AuthenticationService {
   private user = userModel;
@@ -32,7 +36,7 @@ class AuthenticationService {
         user,
       };
     } catch (errMessage) {
-      throw new ErrorWithPayload(INTERNAL_SERVER_ERROR, 'Unable to register new user', { errMessage, userData });
+      throw new ExceptionWithPayload(INTERNAL_SERVER_ERROR, 'Unable to register new user', { errMessage, userData });
     }
   };
 
@@ -42,8 +46,12 @@ class AuthenticationService {
       const isPasswordMatching = await bcrypt.compare(loginData.password, user.password);
       if (isPasswordMatching) {
         user.password = undefined;
+        user.twoFactorAuthenticationCode = undefined;
         const tokenData = this.createToken(user);
         const cookie = this.createCookie(tokenData);
+        if (user.isTwoFactorAuthenticationEnabled) {
+          return { cookie, isTwoFactorAuthenticationEnabled: true };
+        }
         return { cookie, user };
       }
       throw new WrongCredentialsException();
@@ -56,10 +64,46 @@ class AuthenticationService {
     return { cookie };
   };
 
-  private createToken(user: User): TokenData {
+  public secondFactorAuthentication = async (twoFactorAuthenticationCode: string, user: User) => {
+    const isCodeValid = await this.verifyTwoFactorAuthenticationCode(twoFactorAuthenticationCode, user);
+    if (isCodeValid) {
+      const tokenData = this.createToken(user, true);
+      const cookie = this.createCookie(tokenData);
+      user.password = undefined;
+      user.twoFactorAuthenticationCode = undefined;
+      return { cookie, result: user };
+    }
+    throw new WrongAuthenticationTokenException();
+  };
+
+  public getTwoFactorAuthenticationCode() {
+    const secretCode = speakeasy.generateSecret({
+      name: process.env.TWO_FACTOR_AUTHENTICATION_APP_NAME,
+      length: 64,
+    });
+    return {
+      otpauthUrl: secretCode.otpauth_url,
+      base32: secretCode.base32,
+    };
+  }
+
+  public respondWithQRCode(data: string, response: Response) {
+    QRCode.toFileStream(response, data);
+  }
+
+  public verifyTwoFactorAuthenticationCode(twoFactorAuthenticationCode: string, user: User) {
+    return speakeasy.totp.verify({
+      secret: user.twoFactorAuthenticationCode,
+      encoding: 'base32',
+      token: twoFactorAuthenticationCode,
+    });
+  }
+
+  public createToken(user: User, isSecondFactorAuthenticated: boolean = false): TokenData {
     const expiresIn = +process.env.JWT_TTL; // an hour
     const secret = process.env.JWT_SECRET;
     const dataStoredInToken: DataStoredInToken = {
+      isSecondFactorAuthenticated,
       _id: user._id,
     };
     return {
@@ -68,7 +112,7 @@ class AuthenticationService {
     };
   }
 
-  private createCookie(tokenData: TokenData = { token: '', expiresIn: 0 }) {
+  public createCookie(tokenData: TokenData = { token: '', expiresIn: 0 }) {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn}`;
   }
 }

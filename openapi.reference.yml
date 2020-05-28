@@ -11,21 +11,21 @@ servers:
   - url: 'https://localhost:5000/api'
     description: local dev server
 paths:
-  /posts:
+  /post:
     get:
       summary: getAllPosts
       tags:
-        - Posts
+        - Post
       responses: {}
       operationId: get-posts
     post:
       summary: createPost
       tags:
-        - Posts
+        - Post
       responses: {}
       operationId: post-posts
       description: ''
-  '/posts/{id}':
+  '/post/{id}':
     parameters:
       - schema:
           type: string
@@ -35,19 +35,19 @@ paths:
     get:
       summary: getPostById
       tags:
-        - Posts
+        - Post
       responses: {}
       operationId: get-posts-id
     delete:
       summary: deletePost
       tags:
-        - Posts
+        - Post
       responses: {}
       operationId: delete-posts-id
     patch:
       summary: modifyPost
       tags:
-        - Posts
+        - Post
       responses: {}
       operationId: patch-posts-id
   /auth/register:
@@ -140,7 +140,7 @@ paths:
         - Auth
       responses: {}
       operationId: post-auth-logout
-  '/user/{id}/posts':
+  '/user/{id}/post':
     parameters:
       - schema:
           type: string
@@ -281,7 +281,7 @@ components:
           type: object
       x-tags:
         - Auth
-        - Posts
+        - Post
         - report
         - user
 security:

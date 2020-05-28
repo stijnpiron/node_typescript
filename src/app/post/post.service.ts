@@ -4,7 +4,7 @@ import Post from './post.interface';
 import CreatePostDto from './post.dto';
 import HttpException from '../exceptions/HttpException';
 import PostNotFoundException from '../exceptions/PostNotFoundException';
-import ErrorWithPayload from '../exceptions/ErrorWithPayload';
+import ExceptionWithPayload from '../exceptions/ExceptionWithPayload';
 import User from '../user/user.interface';
 import NotAuthorizedException from '../exceptions/NotAuthorizedException';
 import { compareStrings } from '../utils/utils';
@@ -25,7 +25,7 @@ class PostService {
   };
 
   public getPostsForUser = async (author: string, user: User) => {
-    if (compareStrings(author, user._id)) {
+    if (compareStrings(author, user._id.toString())) {
       const posts = await this.post.find({ author });
       if (posts) return posts;
     }
@@ -46,13 +46,13 @@ class PostService {
     const savedPost = await createdPost.save();
     const returnPost = await savedPost.populate('author', '-password').execPopulate();
     if (returnPost) return returnPost;
-    throw new ErrorWithPayload(INTERNAL_SERVER_ERROR, 'Unable to create post', { author, postData });
+    throw new ExceptionWithPayload(INTERNAL_SERVER_ERROR, 'Unable to create post', { author, postData });
   };
 
   public deletePost = async (id: string) => {
     const deleteResponse = await this.post.findByIdAndDelete(id);
     if (deleteResponse) return deleteResponse;
-    throw new ErrorWithPayload(NOT_FOUND, `Post not found with id ${id}`, { id });
+    throw new ExceptionWithPayload(NOT_FOUND, `Post not found with id ${id}`, { id });
   };
 }
 
