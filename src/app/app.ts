@@ -10,15 +10,18 @@ import fs from 'fs';
 import https from 'https';
 import util from 'util';
 import loggerMiddleware from './middleware/logger.middleware';
+import mongooseMorgan from 'mongoose-morgan';
+import { stringContainsElementOfArray } from './utils/utils';
 
 class App {
   public app: express.Application;
   private basePath: string = '/api';
   private readFile = util.promisify(fs.readFile);
+  private mongoConnectionString = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_PATH}/${process.env.MONGO_DB}`;
 
   constructor(controllers: Controller[]) {
     this.app = express();
-
+    this.initializeLogging();
     this.connectToTheDatabase();
     this.initializeMiddlewares();
     this.initializeSwagger();
@@ -33,8 +36,23 @@ class App {
     });
   }
 
+  private initializeLogging() {
+    this.app.use(
+      process.env.NODE_ENV === 'production'
+        ? mongooseMorgan(
+            { connectionString: this.mongoConnectionString },
+            {
+              skip: (req: express.Request, res: express.Response) => {
+                return stringContainsElementOfArray(req.originalUrl, ['/api/swagger']);
+              },
+            },
+            ':method :status : :url : :response-time[digits]ms/:total-time[digits]ms :res[content-length]B -- :remote-addr - :remote-user -- ":referrer" ":user-agent" HTTP/:http-version -- :req[cookie]'
+          )
+        : loggerMiddleware(['/swagger'])
+    );
+  }
+
   private initializeMiddlewares() {
-    this.app.use(loggerMiddleware(['/swagger']));
     this.app.use(bodyParser.json());
     this.app.use(cookieParser());
   }
@@ -64,8 +82,7 @@ class App {
   }
 
   private connectToTheDatabase() {
-    const { MONGO_USER, MONGO_PASSWORD, MONGO_PATH, MONGO_DB } = process.env;
-    mongoose.connect(`mongodb://${MONGO_USER}:${MONGO_PASSWORD}@${MONGO_PATH}/${MONGO_DB}`, { useNewUrlParser: true, useUnifiedTopology: true });
+    mongoose.connect(this.mongoConnectionString, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
   }
 }
 

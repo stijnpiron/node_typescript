@@ -28,6 +28,7 @@
     "http-status-codes": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.16",
+    "mongoose-morgan": "^1.0.13",
     "qrcode": "^1.4.4",
     "speakeasy": "^2.0.0",
     "swagger-ui-express": "^4.1.4",
