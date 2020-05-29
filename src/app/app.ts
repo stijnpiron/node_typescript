@@ -1,6 +1,6 @@
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
-import express from 'express';
+import express, { Application } from 'express';
 import mongoose from 'mongoose';
 import swaggerUI from 'swagger-ui-express';
 import Controller from './interfaces/controller.interface';
@@ -27,6 +27,11 @@ class App {
     this.initializeSwagger();
     this.initializeControllers(controllers);
     this.initializeErrorHandling();
+    this.listen();
+  }
+
+  public getExpressInstance(): Application {
+    return this.app;
   }
 
   public async listen(): Promise<void> {

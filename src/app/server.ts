@@ -15,4 +15,4 @@ const app = new App([
   new ReportController(),
 ]);
 
-app.listen();
+export default app;
