@@ -41,12 +41,23 @@ export function stringContainsElementOfArray(input: string, elements: string[] =
 /**
  * Function accepts 2 Date objects and returns difference in ms
  *
+ * @todo: add functionality to set the return scale (ms, s, m, ...)
  * @param {Date} start start time
  * @param {Date} end end time
  * @returns {number}
  */
 export function timeDiff(start: Date, end: Date): number {
-  // TODO add functionality to set the return scale (ms, s, m, ...)
   const diff = end.getTime() - start.getTime();
   return diff;
+}
+
+/**
+ * Functions accepts Date object and will return the representing UTC string
+ *
+ * @todo: Add functionality to pass custom formats and default back to UTC string when none provided
+ * @param input
+ * @returns {string}
+ */
+export function dateFormat(input: Date): string {
+  return input.toUTCString();
 }
