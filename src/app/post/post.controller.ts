@@ -18,9 +18,10 @@ class PostController implements Controller {
     this.initializeRoutes();
   }
 
-  private initializeRoutes() {
+  private initializeRoutes(): void {
     this.router.get(this.path, this.getAllPosts);
     this.router.get(`${this.path}/:id`, this.getPostById);
+
     this.router
       .all(`${this.path}/*`, authMiddleware())
       .delete(`${this.path}/:id`, this.deletePost)
@@ -28,7 +29,11 @@ class PostController implements Controller {
       .post(this.path, validationMiddleware(CreatePostDto), this.createPost as any);
   }
 
-  private getAllPosts = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  private getAllPosts = async (
+    _: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
     try {
       const posts = await this.postService.getAllPosts();
       res.status(OK).send(posts);
@@ -37,8 +42,13 @@ class PostController implements Controller {
     }
   };
 
-  private getPostById = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const id = req.params.id;
+  private getPostById = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const { id } = req.params;
+
     try {
       const post = await this.postService.getPost(id);
       res.status(OK).send(post);
@@ -47,9 +57,14 @@ class PostController implements Controller {
     }
   };
 
-  private modifyPost = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const id = req.params.id;
+  private modifyPost = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const { id } = req.params;
     const postData: Post = req.body;
+
     try {
       const post = await this.postService.modifyPost(id, postData);
       res.status(OK).send(post);
@@ -58,12 +73,17 @@ class PostController implements Controller {
     }
   };
 
-  private createPost = async (req: RequestWithUser, res: express.Response, next: express.NextFunction) => {
+  private createPost = async (
+    req: RequestWithUser,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
     const postData: CreatePostDto = req.body;
-    if (!req.user) {
-      next(new WrongAuthenticationTokenException());
-    }
+
+    if (!req.user) next(new WrongAuthenticationTokenException());
+
     const userId: string = req.user._id;
+
     try {
       const createdPost = await this.postService.createPost(userId, postData);
       res.status(OK).send(createdPost);
@@ -72,8 +92,13 @@ class PostController implements Controller {
     }
   };
 
-  private deletePost = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const id = req.params.id;
+  private deletePost = async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
+    const { id } = req.params;
+
     try {
       await this.postService.deletePost(id);
       res.status(OK).send();

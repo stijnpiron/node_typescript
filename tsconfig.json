@@ -5,12 +5,16 @@
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "removeComments": true,
     "module": "commonjs",
-    "noImplicitAny": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "removeComments": true,
+    "outDir": "dist",
     "sourceMap": true,
-    "target": "es2017"
+    "strictNullChecks": false,
+    "target": "es2020"
   },
   "include": ["src/app/**/*.ts"],
-  "exclude": ["node_modules", "assets", ".vscode", "build"]
+  "exclude": ["node_modules", "assets", ".vscode", "dist"]
 }
