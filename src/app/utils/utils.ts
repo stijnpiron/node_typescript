@@ -21,7 +21,7 @@ export function getUUID(): string {
 
 /**
  * Function that checks if the input string includes any single element of a given series of strings at any place.
- * IF no elements are given, or the length of elements is 0, the function wille return true.
+ * If no elements are given, or the length of elements is 0, the function wille return true.
  *
  * @param {string} input String to be checked upon
  * @param {?Array.string} elements Elements to be checked if present in input string
@@ -36,4 +36,17 @@ export function stringContainsElementOfArray(input: string, elements: string[] =
   }
   // Return false if all elements are not present in the input string
   return false;
+}
+
+/**
+ * Function accepts 2 Date objects and returns difference in ms
+ *
+ * @param {Date} start start time
+ * @param {Date} end end time
+ * @returns {number}
+ */
+export function timeDiff(start: Date, end: Date): number {
+  // TODO add functionality to set the return scale (ms, s, m, ...)
+  const diff = end.getTime() - start.getTime();
+  return diff;
 }
