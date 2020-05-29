@@ -1,10 +1,11 @@
+// TODO: Add variations of usermodal (userForRegistor, userForLogin, ...)
 interface User {
-  _id: string;
+  _id?: string;
   name: string;
   email: string;
   password: string;
   twoFactorAuthenticationCode?: string;
-  isTwoFactorAuthenticationEnabled: boolean;
+  isTwoFactorAuthenticationEnabled?: boolean;
   address?: Address;
 }
 

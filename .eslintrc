@@ -114,5 +114,11 @@
     "spaced-comment": ["error", "always"],
     "switch-colon-spacing": ["error", { "after": true, "before": false }],
     "unused-imports/no-unused-imports": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.test.ts"],
+      "rules": { "@typescript-eslint/no-var-requires": "off", "no-unused-expressions": "off" }
+    }
+  ]
 }

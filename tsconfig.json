@@ -16,5 +16,5 @@
     "target": "es2020"
   },
   "include": ["src/app/**/*.ts"],
-  "exclude": ["node_modules", "assets", ".vscode", "dist"]
+  "exclude": ["node_modules", "assets", ".vscode", "dist", "src/app/**/*.test.ts"]
 }
