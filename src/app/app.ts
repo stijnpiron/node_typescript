@@ -42,35 +42,37 @@ class App {
 
     this.app.listen(process.env.PORT, () => {
       const endTime = new Date();
-      console.info(`--- server listening (${timeDiff(startTime, endTime)}ms)`);
+      if (process.env.NODE_ENV !== 'test') console.info(`--- server listening (${timeDiff(startTime, endTime)}ms)`);
       this.initializeTime += timeDiff(startTime, endTime);
-      console.info(`--- server initialized in ${this.initializeTime}ms`);
-      console.info(`Server listening on https port ${process.env.PORT}`);
+      if (process.env.NODE_ENV !== 'test') console.info(`--- server initialized in ${this.initializeTime}ms`);
+      if (process.env.NODE_ENV !== 'test') console.info(`Server listening on https port ${process.env.PORT}`);
     });
   }
 
   private async initializeLogging(): Promise<void> {
     const startTime = new Date();
 
-    this.app.use(
-      process.env.NODE_ENV !== 'development'
-        ? mongooseMorgan(
-            {
-              connectionString: this.mongoConnectionString,
-              collection: process.env.LOG_MORGAN,
-            },
-            {
-              skip: (req: express.Request, _: express.Response) =>
-                stringContainsElementOfArray(req.originalUrl, ['/api/swagger']),
-            },
-            ':method :status : :url : :response-time[digits]ms/:total-time[digits]ms :res[content-length]B -- :remote-addr - \
+    if (process.env.NODE_ENV !== 'test')
+      this.app.use(
+        process.env.NODE_ENV !== 'development'
+          ? mongooseMorgan(
+              {
+                connectionString: this.mongoConnectionString,
+                collection: process.env.LOG_MORGAN,
+              },
+              {
+                skip: (req: express.Request, _: express.Response) =>
+                  stringContainsElementOfArray(req.originalUrl, ['/api/swagger']),
+              },
+              ':method :status : :url : :response-time[digits]ms/:total-time[digits]ms :res[content-length]B -- :remote-addr - \
             :remote-user -- ":referrer" ":user-agent" HTTP/:http-version -- :req[cookie]'
-          )
-        : loggerMiddleware(['/swagger'])
-    );
+            )
+          : loggerMiddleware(['/swagger'])
+      );
+
     const endTime = new Date();
 
-    console.info(`--- logging up and running (${timeDiff(startTime, endTime)}ms)`);
+    if (process.env.NODE_ENV !== 'test') console.info(`--- logging up and running (${timeDiff(startTime, endTime)}ms)`);
     this.initializeTime += timeDiff(startTime, endTime);
   }
 
@@ -80,7 +82,8 @@ class App {
     this.app.use(cookieParser());
     const endTime = new Date();
 
-    console.info(`--- middlewares up and running (${timeDiff(startTime, endTime)}ms)`);
+    if (process.env.NODE_ENV !== 'test')
+      console.info(`--- middlewares up and running (${timeDiff(startTime, endTime)}ms)`);
     this.initializeTime += timeDiff(startTime, endTime);
   }
 
@@ -89,12 +92,12 @@ class App {
     this.app.use(errorMiddleware);
     const endTime = new Date();
 
-    console.info(`--- error handling up and running (${timeDiff(startTime, endTime)}ms)`);
+    if (process.env.NODE_ENV !== 'test')
+      console.info(`--- error handling up and running (${timeDiff(startTime, endTime)}ms)`);
     this.initializeTime += timeDiff(startTime, endTime);
   }
 
   private async initializeSwagger(): Promise<void> {
-    // TODO: Investigate on how to include swagger documentation in Typescript build
     try {
       const startTime = new Date();
 
@@ -104,10 +107,11 @@ class App {
       this.app.use(`${this.basePath}/swagger`, swaggerUI.serve, swaggerUI.setup(swaggerDocumentation));
       const endTime = new Date();
 
-      console.info(`--- swagger up and running (${timeDiff(startTime, endTime)}ms)`);
+      if (process.env.NODE_ENV !== 'test')
+        console.info(`--- swagger up and running (${timeDiff(startTime, endTime)}ms)`);
       this.initializeTime += timeDiff(startTime, endTime);
     } catch (err) {
-      console.warn('--- unable to generate Swagger documentation', err);
+      if (process.env.NODE_ENV !== 'test') console.warn('--- unable to generate Swagger documentation', err);
     }
   }
 
@@ -119,7 +123,8 @@ class App {
     });
     const endTime = new Date();
 
-    console.info(`--- controllers initialized (${timeDiff(startTime, endTime)}ms)`);
+    if (process.env.NODE_ENV !== 'test')
+      console.info(`--- controllers initialized (${timeDiff(startTime, endTime)}ms)`);
     this.initializeTime += timeDiff(startTime, endTime);
   }
 
@@ -132,7 +137,7 @@ class App {
       useFindAndModify: false,
     });
     const endTime = new Date();
-    console.info(`--- database connected (${timeDiff(startTime, endTime)}ms)`);
+    if (process.env.NODE_ENV !== 'test') console.info(`--- database connected (${timeDiff(startTime, endTime)}ms)`);
     this.initializeTime += timeDiff(startTime, endTime);
   }
 }

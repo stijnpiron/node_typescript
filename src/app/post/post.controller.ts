@@ -1,4 +1,3 @@
-import WrongAuthenticationTokenException from '../exceptions/WrongAuthenticationTokenException';
 import express from 'express';
 import Controller from '../interfaces/controller.interface';
 import RequestWithUser from '../interfaces/requestWithUser.interface';
@@ -20,13 +19,13 @@ class PostController implements Controller {
 
   private initializeRoutes(): void {
     this.router.get(this.path, this.getAllPosts);
-    this.router.get(`${this.path}/:id`, this.getPostById);
 
     this.router
-      .all(`${this.path}/*`, authMiddleware())
+      .all(`${this.path}*`, authMiddleware())
+      .get(`${this.path}/:id`, this.getPostById)
       .delete(`${this.path}/:id`, this.deletePost)
       .patch(`${this.path}/:id`, validationMiddleware(CreatePostDto, true), this.modifyPost)
-      .post(this.path, validationMiddleware(CreatePostDto), this.createPost as any);
+      .post(this.path, validationMiddleware(CreatePostDto), this.createPost);
   }
 
   private getAllPosts = async (
@@ -63,9 +62,9 @@ class PostController implements Controller {
     next: express.NextFunction
   ): Promise<void> => {
     const { id } = req.params;
-    const postData: Post = req.body;
 
     try {
+      const postData: Post = req.body;
       const post = await this.postService.modifyPost(id, postData);
       res.status(OK).send(post);
     } catch (err) {
@@ -79,9 +78,6 @@ class PostController implements Controller {
     next: express.NextFunction
   ): Promise<void> => {
     const postData: CreatePostDto = req.body;
-
-    if (!req.user) next(new WrongAuthenticationTokenException());
-
     const userId: string = req.user._id;
 
     try {

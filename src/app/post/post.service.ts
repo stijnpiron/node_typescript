@@ -13,7 +13,9 @@ class PostService {
   private post = postModel;
 
   public getAllPosts = async (): Promise<Post[]> => {
-    const posts = await this.post.find().populate('author', '-password');
+    const posts = await this.post
+      .find()
+      .populate('author', '-password -twoFactorAuthenticationCode -isTwoFactorAuthenticationEnabled');
     if (posts) return posts;
     throw new HttpException(INTERNAL_SERVER_ERROR, 'Unable to get all posts');
   };
