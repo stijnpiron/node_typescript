@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
   address: addressSchema,
   email: String,
   name: String,
-  password: String,
+  password: { type: String, get: (): undefined => undefined },
   twoFactorAuthenticationCode: String,
   isTwoFactorAuthenticationEnabled: Boolean,
 });

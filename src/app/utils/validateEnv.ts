@@ -4,6 +4,7 @@ function validateEnv() {
   cleanEnv(process.env, {
     JWT_SECRET: str(),
     JWT_TTL: num(),
+    LOG_MORGAN: str(),
     MONGO_DB: str(),
     MONGO_PASSWORD: str(),
     MONGO_PATH: str(),
