@@ -1,19 +1,16 @@
 import { expect } from 'chai';
 import AppInstance from './server';
 
-const supertest = require('supertest')(AppInstance.getExpressInstance());
-
-describe('Index Test', () => {
-  it('should always pass', () => {
-    expect(true).to.equal(true);
-  });
-});
-
 describe('Server test', () => {
+  let supertest: any = null;
+
+  before(async () => {
+    supertest = require('supertest')(AppInstance.getExpressInstance());
+  });
+
   it('tests the base route and returns true for status', async () => {
     const res = await supertest.get('/api');
-
-    expect(res.status).to.equal(404);
-    // expect(res.body.status).to.equal(true);
+    expect(res.status).to.equal(200);
+    expect(res.body).not.to.be.empty;
   });
 });

@@ -15,7 +15,7 @@
     "serve": "node dist/server.js",
     "start": "npm run serve",
     "start:test": "npm run rem-dist && npm run build:ts && node dist/server.js",
-    "test": "ts-mocha src/app/**/*.test.ts --exit",
+    "test": "ts-mocha src/app/**/*.test.ts",
     "validate:dev": "npm run rem-dist && npm run format && npm run lint && npm run build:ts && npm run rem-dist"
   },
   "keywords": [],

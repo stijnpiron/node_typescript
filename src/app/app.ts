@@ -9,8 +9,11 @@ import YAML from 'yaml';
 import fs from 'fs';
 import util from 'util';
 import loggerMiddleware from './middleware/logger.middleware';
-import mongooseMorgan from 'mongoose-morgan';
 import { stringContainsElementOfArray, timeDiff } from './utils/utils';
+
+// TODO: fix importing mongoose-morgan when TypeScript types come available in the package or when @types/mongoose-morgan comes available
+/* eslint-disable-next-line */
+const mongooseMorgan: any = require('mongoose-morgan');
 
 class App {
   private initializeTime = 0;
@@ -50,7 +53,7 @@ class App {
     const startTime = new Date();
 
     this.app.use(
-      process.env.NODE_ENV === 'production'
+      process.env.NODE_ENV !== 'development'
         ? mongooseMorgan(
             {
               connectionString: this.mongoConnectionString,

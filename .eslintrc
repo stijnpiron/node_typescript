@@ -118,7 +118,7 @@
   "overrides": [
     {
       "files": ["*.test.ts"],
-      "rules": { "@typescript-eslint/no-var-requires": "off" }
+      "rules": { "@typescript-eslint/no-var-requires": "off", "no-unused-expressions": "off" }
     }
   ]
 }
