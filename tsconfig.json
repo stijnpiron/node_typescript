@@ -11,6 +11,6 @@
     "sourceMap": true,
     "target": "es2017"
   },
-  "include": ["src/app/**/*.ts", "src/test/authentication.service.test.ts"],
+  "include": ["src/app/**/*.ts"],
   "exclude": ["node_modules", "assets", ".vscode", "build"]
 }
