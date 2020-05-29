@@ -8,6 +8,11 @@ import ReportController from './report/report.controller';
 
 validateEnv();
 
-const app = new App([new PostController(), new AuthenticationController(), new UserController(), new ReportController()]);
+const app = new App([
+  new PostController(),
+  new AuthenticationController(),
+  new UserController(),
+  new ReportController(),
+]);
 
 app.listen();

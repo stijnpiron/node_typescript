@@ -13,11 +13,15 @@ class ReportController implements Controller {
     this.initializeRoutes();
   }
 
-  private initializeRoutes() {
+  private initializeRoutes(): void {
     this.router.all(`${this.path}`, authMiddleware()).get(`${this.path}`, this.generateReport);
   }
 
-  private generateReport = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  private generateReport = async (
+    _: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ): Promise<void> => {
     try {
       const report = await this.reportService.generateReport();
       res.status(OK).send(report);

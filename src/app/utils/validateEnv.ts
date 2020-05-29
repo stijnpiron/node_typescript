@@ -1,6 +1,6 @@
-import { cleanEnv, port, str, num } from 'envalid';
+import { cleanEnv, num, port, str } from 'envalid';
 
-function validateEnv() {
+function validateEnv(): any {
   cleanEnv(process.env, {
     JWT_SECRET: str(),
     JWT_TTL: num(),

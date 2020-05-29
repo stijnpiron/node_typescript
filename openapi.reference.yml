@@ -8,8 +8,14 @@ info:
     email: info@grasshopper.io
     url: 'https://grasshopper.io'
 servers:
-  - url: 'https://localhost:5000/api'
-    description: local dev server
+  - url: '{server}/api'
+    variables:
+      server:
+        enum:
+          - http://localhost:5000
+          - https://grasshopperio-node-typescript.herokuapp.com
+        description: When running locally, select localhost
+        default: http://localhost:5000
 paths:
   /post:
     get:
