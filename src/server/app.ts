@@ -10,10 +10,8 @@ import fs from 'fs';
 import util from 'util';
 import loggerMiddleware from './middleware/logger.middleware';
 import { stringContainsElementOfArray, timeDiff } from './utils/utils';
-
 // TODO: fix importing mongoose-morgan when TypeScript types come available in the package or when @types/mongoose-morgan comes available
-/* eslint-disable-next-line */
-const mongooseMorgan: any = require('mongoose-morgan');
+import mongooseMorgan from 'mongoose-morgan';
 
 class App {
   private initializeTime = 0;
@@ -50,9 +48,9 @@ class App {
   }
 
   private async initializeLogging(): Promise<void> {
-    const startTime = new Date();
+    if (!process.env.TESTRUN) {
+      const startTime = new Date();
 
-    if (process.env.NODE_ENV !== 'test')
       this.app.use(
         process.env.NODE_ENV !== 'development'
           ? mongooseMorgan(
@@ -69,11 +67,12 @@ class App {
             )
           : loggerMiddleware(['/swagger'])
       );
+      const endTime = new Date();
 
-    const endTime = new Date();
-
-    if (process.env.NODE_ENV !== 'test') console.info(`--- logging up and running (${timeDiff(startTime, endTime)}ms)`);
-    this.initializeTime += timeDiff(startTime, endTime);
+      if (process.env.NODE_ENV !== 'test')
+        console.info(`--- logging up and running (${timeDiff(startTime, endTime)}ms)`);
+      this.initializeTime += timeDiff(startTime, endTime);
+    }
   }
 
   private initializeMiddlewares(): void {
