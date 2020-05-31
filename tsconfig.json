@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "alwaysStrict": true,
-    "baseUrl": "./src/app",
+    "baseUrl": "./src",
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
@@ -15,6 +15,6 @@
     "strictNullChecks": false,
     "target": "es2020"
   },
-  "include": ["src/app/**/*.ts"],
-  "exclude": ["node_modules", "assets", ".vscode", "dist", "src/app/**/*.test.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "assets", ".vscode", "dist", "src/**/*.test.ts"]
 }
