@@ -48,8 +48,6 @@ class App {
   }
 
   private async initializeLogging(): Promise<void> {
-    console.info(process.env.TESTRUN);
-
     if (!process.env.TESTRUN) {
       const startTime = new Date();
 
